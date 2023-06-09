@@ -20,6 +20,6 @@ const DELETE_CLIENTS = gql`
       phone
     }
   }
-`;
+`; 
 
-export {ADD_CLIENT, DELETE_CLIENTS };
+export {ADD_CLIENT, DELETE_CLIENTS};

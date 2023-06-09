@@ -1,4 +1,3 @@
-import "./App.css";
 import Header from "./components/Header";
 import { Routes, Route } from "react-router-dom";
 import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";

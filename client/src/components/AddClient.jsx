@@ -51,8 +51,8 @@ export default function AddClient() {
         data-bs-toggle="modal"
         data-bs-target="#addClientModal"
       >
-        <div className="d-flex align-itemx-center">
-          <FaUser className="icon" />
+        <div className="d-flex align-item-center">
+          <FaUser className="icon mt-1" />
           <div>Add Client</div>
         </div>
       </button>

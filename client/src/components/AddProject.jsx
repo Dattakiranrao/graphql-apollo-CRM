@@ -17,6 +17,24 @@ export default function AddClient() {
   //get clients for multi select
   const { loading, error, data } = useQuery(GET_CLIENTS);
 
+  const [addProject] = useMutation(ADD_PROJECT, {
+    // variables: {projectFields.name, }
+    variables: {
+      name: projectFields.name,
+      description: projectFields.description,
+      clientId: projectFields.clientId,
+      status: projectFields.status,
+    },
+    update(cache, { data: { addProject } }) {
+      const { projects } = cache.readQuery({ query: GET_PROJECTS });
+      cache.writeQuery({
+        query: GET_PROJECTS,
+        // projects.concat([addProject]) you can use this or the below spread operator
+        data: { projects: [...projects, addProject] },
+      });
+    },
+  });
+
   const onChange = (e) => {
     // setClient({ ...client, [e.target.name]: e.target.value });
     setprojectFields({ ...projectFields, [e.target.name]: e.target.value });
@@ -27,10 +45,16 @@ export default function AddClient() {
     if (
       projectFields.name === "" ||
       projectFields.description === "" ||
-      projectFields.clientId === ""
+      projectFields.status === ""
     ) {
       return alert("Please Fill All Field");
     } else {
+      addProject(
+        projectFields.name,
+        projectFields.description,
+        projectFields.clientId,
+        projectFields.status
+      );
       setprojectFields({
         name: "",
         description: "",
@@ -43,20 +67,6 @@ export default function AddClient() {
   if (loading) <Spinner />;
   if (error) <p>Internal Server Error</p>;
 
-  // const [addClient] = useMutation(ADD_CLIENT, {
-  //   variables: { name: client.name, email: client.email, phone: client.phone },
-  //   update(cache, { data: { addClient } }) {
-  //     const { clients } = cache.readQuery({ query: GET_CLIENTS });
-  //     cache.writeQuery({
-  //       query: GET_CLIENTS,
-  //       data: {
-  //         // clients: clients.concat([addClient]),// this is method 1
-  //         clients: [...clients, addClient],
-  //       },
-  //     });
-  //   },
-  // });
-
   return (
     <>
       {!loading && !error && (
@@ -67,8 +77,8 @@ export default function AddClient() {
             data-bs-toggle="modal"
             data-bs-target="#addProjectModal"
           >
-            <div className="d-flex align-itemx-center">
-              <FaList className="icon" />
+            <div className="d-flex align-item-center">
+              <FaList className="icon mt-1" />
               <div>Add Project</div>
             </div>
           </button>
@@ -122,10 +132,11 @@ export default function AddClient() {
                     <div className="mb-3">
                       <label className="form-label">Status</label>
                       <select
+                        className="form-select"
                         id="status"
+                        name="status"
                         value={projectFields.status}
                         onChange={(e) => onChange(e)}
-                        className="form-select"
                       >
                         <option value="new">Not Started</option>
                         <option value="progress">In Progress</option>
@@ -138,6 +149,7 @@ export default function AddClient() {
                       <select
                         className="form-select"
                         id="clientId"
+                        name="clientId"
                         onChange={(e) => onChange(e)}
                         value={projectFields.clientId}
                       >
